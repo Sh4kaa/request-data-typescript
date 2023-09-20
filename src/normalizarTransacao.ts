@@ -8,7 +8,19 @@ declare global {
     | "Aguardando pagamento"
     | "Estornada";
 
-  export interface TransacaoAPI {
+  interface Transacao {
+    nome: string;
+    id: number;
+    data: Date;
+    status: TransacaoStatus;
+    email: string;
+    moeda: string;
+    valor: number | null;
+    pagamento: TransacaoPagamento;
+    novo: boolean;
+  }
+
+  interface TransacaoAPI {
     Nome: string;
     ID: number;
     Data: string;
@@ -19,17 +31,18 @@ declare global {
     ["Cliente Novo"]: number;
   }
 }
-export default function normalizarTransacao(transacao: TransacaoAPI) {
+export default function normalizarTransacao(
+  transacao: TransacaoAPI
+): Transacao {
   return {
     nome: transacao.Nome,
     id: transacao.ID,
     data: stringToDate(transacao.Data),
-    dataNormal: transacao.Data,
     status: transacao.Status,
     email: transacao.Email,
     moeda: transacao["Valor (R$)"],
     valor: 0,
     pagamento: transacao["Forma de Pagamento"],
-    novo: Boolean(transacao["Cliente Novo"])
-  }
+    novo: Boolean(transacao["Cliente Novo"]),
+  };
 }

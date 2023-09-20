@@ -1,15 +1,32 @@
 import fetchData from "./fetchData.js";
 import normalizarTransacao from "./normalizarTransacao.js";
 
-
-
 async function apiTransacao() {
-  const data = await fetchData<TransacaoAPI[]>('https://api.origamid.dev/json/transacoes.json')
-  if(!data) return;
+  const data = await fetchData<TransacaoAPI[]>(
+    "https://api.origamid.dev/json/transacoes.json"
+  );
+  if (!data) return;
 
-  const transacoes = data.map(normalizarTransacao) 
-  console.log(transacoes)
-
+  const transacoes = data.map(normalizarTransacao);
+  preencherTabela(transacoes);
 }
 
-apiTransacao()
+function preencherTabela(transacoes: Transacao[]): void {
+  const tabela = document.querySelector("#transacoes tbody");
+  if (!tabela) return;
+
+  transacoes.forEach((transacao) => {
+    tabela.innerHTML += `
+      <tr>
+        <td>${transacao.nome}</td>
+        <td>${transacao.email}</td>
+        <td>R$ ${transacao.moeda}</td>
+        <td>${transacao.pagamento}</td>
+        <td>${transacao.status}</td>
+      </tr>
+    
+    `;
+  });
+}
+
+apiTransacao();

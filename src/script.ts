@@ -1,4 +1,5 @@
 import Estatisticas from "./Estatisticas.js";
+import { CountList } from "./countBy.js";
 import fetchData from "./fetchData.js";
 import normalizarTransacao from "./normalizarTransacao.js";
 
@@ -10,20 +11,29 @@ async function apiTransacao() {
 
   const transacoes = data.map(normalizarTransacao);
   preencherTabela(transacoes);
-  preencherEstatisticas(transacoes)
+  preencherEstatisticas(transacoes);
+}
+
+function preencherLista(lista: CountList, containerId: string) {
+  const pagamentoElement = document.getElementById(containerId);
+  if (pagamentoElement) {
+    Object.keys(lista).forEach((key) => {
+      pagamentoElement.innerHTML += `<p>${key}: ${lista[key]}</p>`;
+    });
+  }
 }
 
 function preencherEstatisticas(transacoes: Transacao[]): void {
-  const data = new Estatisticas(transacoes)
-  const spanTotal = document.querySelector<HTMLSpanElement>('#total span')
-  if(spanTotal) {
-    spanTotal.innerText = data.total.toLocaleString('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    })
+  const data = new Estatisticas(transacoes);
+  const spanTotal = document.querySelector<HTMLSpanElement>("#total span");
+  preencherLista(data.pagamento, "pagamento");
+  preencherLista(data.status, "status");
+  if (spanTotal) {
+    spanTotal.innerText = data.total.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
   }
-  console.log(data.status)
-  console.log(data.pagamento)
 }
 
 function preencherTabela(transacoes: Transacao[]): void {

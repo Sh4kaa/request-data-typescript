@@ -9,17 +9,25 @@ async function apiTransacao() {
     preencherTabela(transacoes);
     preencherEstatisticas(transacoes);
 }
-function preencherEstatisticas(transacoes) {
-    const data = new Estatisticas(transacoes);
-    const spanTotal = document.querySelector('#total span');
-    if (spanTotal) {
-        spanTotal.innerText = data.total.toLocaleString('pt-BR', {
-            style: 'currency',
-            currency: 'BRL'
+function preencherLista(lista, containerId) {
+    const pagamentoElement = document.getElementById(containerId);
+    if (pagamentoElement) {
+        Object.keys(lista).forEach((key) => {
+            pagamentoElement.innerHTML += `<p>${key}: ${lista[key]}</p>`;
         });
     }
-    console.log(data.status);
-    console.log(data.pagamento);
+}
+function preencherEstatisticas(transacoes) {
+    const data = new Estatisticas(transacoes);
+    const spanTotal = document.querySelector("#total span");
+    preencherLista(data.pagamento, "pagamento");
+    preencherLista(data.status, "status");
+    if (spanTotal) {
+        spanTotal.innerText = data.total.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+        });
+    }
 }
 function preencherTabela(transacoes) {
     const tabela = document.querySelector("#transacoes tbody");

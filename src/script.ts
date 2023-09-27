@@ -12,6 +12,7 @@ async function apiTransacao() {
   const transacoes = data.map(normalizarTransacao);
   preencherTabela(transacoes);
   preencherEstatisticas(transacoes);
+  
 }
 
 function preencherLista(lista: CountList, containerId: string) {
@@ -25,14 +26,19 @@ function preencherLista(lista: CountList, containerId: string) {
 
 function preencherEstatisticas(transacoes: Transacao[]): void {
   const data = new Estatisticas(transacoes);
-  const spanTotal = document.querySelector<HTMLSpanElement>("#total span");
   preencherLista(data.pagamento, "pagamento");
   preencherLista(data.status, "status");
+  const spanTotal = document.querySelector<HTMLSpanElement>("#total span");
   if (spanTotal) {
     spanTotal.innerText = data.total.toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL",
     });
+  }
+
+  const dia = document.querySelector<HTMLSpanElement>("#dia span");
+  if (dia) {
+    dia.innerText = data.melhorDia[0]
   }
 }
 
